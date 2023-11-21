@@ -9,72 +9,72 @@ from sklearn.ensemble import RandomForestRegressor
 import pickle
 
 data = pd.read_csv('Financial_inclusion_dataset.csv')
-# data.head()
+data.head()
 
-# df = data.copy()
-# df.drop('uniqueid', inplace = True, axis = 1)
+df = data.copy()
+df.drop('uniqueid', inplace = True, axis = 1)
 
-# df = df.drop_duplicates()
+df = df.drop_duplicates()
 
-# cat = df.select_dtypes(include = ['object', 'category'])
-# num = df.select_dtypes(include= 'number')
+cat = df.select_dtypes(include = ['object', 'category'])
+num = df.select_dtypes(include= 'number')
 
-# from sklearn.preprocessing import StandardScaler, LabelEncoder
-# scaler = StandardScaler()
-# encoder = LabelEncoder()
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+scaler = StandardScaler()
+encoder = LabelEncoder()
 
-# for i in num.columns: 
-#     if i in df.columns: 
-#         df[i] = scaler.fit_transform(df[[i]]) 
-# for i in cat.columns:
-#     if i in df.columns: 
-#         df[i] = encoder.fit_transform(df[i])
+for i in num.columns: 
+    if i in df.columns: 
+        df[i] = scaler.fit_transform(df[[i]]) 
+for i in cat.columns:
+    if i in df.columns: 
+        df[i] = encoder.fit_transform(df[i])
 
-# # - Using XGBOOST to find feature importance
-# x = df.drop('bank_account', axis = 1)
-# y = df.bank_account 
+# - Using XGBOOST to find feature importance
+x = df.drop('bank_account', axis = 1)
+y = df.bank_account 
 
-# import xgboost as xgb
-# model = xgb.XGBClassifier()
-# model.fit(x, y)
+import xgboost as xgb
+model = xgb.XGBClassifier()
+model.fit(x, y)
 
-# # Print feature importance scores
-# xgb.plot_importance(model)
+# Print feature importance scores
+xgb.plot_importance(model)
 
-# sel_cols = ['country', 'year', 'location_type', 'cellphone_access',
-#        'household_size', 'age_of_respondent', 'gender_of_respondent',
-#        'relationship_with_head', 'marital_status', 'education_level',
-#        'job_type']
-# x = df[sel_cols]
-# x = pd.concat([x, df['bank_account']], axis = 1)
+sel_cols = ['country', 'year', 'location_type', 'cellphone_access',
+       'household_size', 'age_of_respondent', 'gender_of_respondent',
+       'relationship_with_head', 'marital_status', 'education_level',
+       'job_type']
+x = df[sel_cols]
+x = pd.concat([x, df['bank_account']], axis = 1)
 
 
 
-# # UnderSampling The Majority Class
-# class1 = df.loc[df['bank_account'] == 1]    
-# class0 = df.loc[df['bank_account'] == 0]   
-# class1_3000 = class0.sample(5000)   
-# new_dataframe = pd.concat([class1_3000, class1], axis = 0) 
+# UnderSampling The Majority Class
+class1 = df.loc[df['bank_account'] == 1]    
+class0 = df.loc[df['bank_account'] == 0]   
+class1_3000 = class0.sample(5000)   
+new_dataframe = pd.concat([class1_3000, class1], axis = 0) 
 
 
 # #---------------MODELLING--------------------
-# x = new_dataframe.drop('bank_account', axis = 1)
-# y = new_dataframe['bank_account']
+x = new_dataframe.drop('bank_account', axis = 1)
+y = new_dataframe['bank_account']
 
-# from sklearn.model_selection import train_test_split
-# xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size = 0.20, random_state = 40, stratify = y)
+from sklearn.model_selection import train_test_split
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size = 0.20, random_state = 40, stratify = y)
 
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 
-# model = RandomForestClassifier() 
-# model.fit(xtrain, ytrain) 
-# cross_validation = model.predict(xtrain)
-# pred = model.predict(xtest) 
+model = RandomForestClassifier() 
+model.fit(xtrain, ytrain) 
+cross_validation = model.predict(xtrain)
+pred = model.predict(xtest) 
 
-# # save model
-# model = pickle.dump(model, open('Financial_inclusion.pkl', 'wb'))
-# print('\nModel is saved\n')
+# save model
+model = pickle.dump(model, open('Financial_inclusion.pkl', 'wb'))
+print('\nModel is saved\n')
 
 
 #-----------------------STREAMLIT DEVELOPMENT----------------------------------
