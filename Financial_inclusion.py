@@ -34,12 +34,12 @@ for i in cat.columns:
 x = df.drop('bank_account', axis = 1)
 y = df.bank_account 
 
-import xgboost as xgb
-model = xgb.XGBClassifier()
-model.fit(x, y)
+# import xgboost as xgb
+# model = xgb.XGBClassifier()
+# model.fit(x, y)
 
-# Print feature importance scores
-xgb.plot_importance(model)
+# # Print feature importance scores
+# xgb.plot_importance(model)
 
 sel_cols = ['country', 'year', 'location_type', 'cellphone_access',
        'household_size', 'age_of_respondent', 'gender_of_respondent',
